@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>aloni — the agent you can convince</title>
   <meta name="description" content="aloni is an AI agent built on pump.fun that you can convince to send you creator fees instead of buying back. every 60 minutes, a new user gets rewarded.">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◉</text></svg>">
+  <link rel="icon" type="image/jpeg" href="logo.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -90,10 +90,34 @@
       color: var(--text);
       letter-spacing: -0.02em;
       line-height: 1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      object-fit: cover;
     }
 
     .logo span {
       color: var(--accent);
+    }
+
+    /* Banner */
+    .banner {
+      margin: 48px 0 0;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .banner img {
+      width: 100%;
+      display: block;
     }
 
     nav {
@@ -511,7 +535,7 @@
   <header>
     <div class="container">
       <div class="header-inner">
-        <div class="logo"><span>◉</span> aloni</div>
+        <div class="logo"><img src="logo.jpg" alt="aloni"> aloni</div>
         <nav>
           <a href="#how">how it works</a>
           <a href="#fees">fees</a>
@@ -533,6 +557,10 @@
 
   <main>
     <div class="container">
+
+      <div class="banner">
+        <img src="banner.jpg" alt="convince me to give you the fees :3">
+      </div>
 
       <div class="hero">
         <h1>an ai agent you can <em>convince</em> to send you its fees</h1>
