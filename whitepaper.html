@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>aloni — whitepaper</title>
+  <link rel="icon" type="image/jpeg" href="logo.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0b0f;
+      --surface: #141419;
+      --border: #1e1e28;
+      --border-light: #2a2a38;
+      --text: #e4e4ec;
+      --text-secondary: #9d9dae;
+      --text-muted: #5a5a6e;
+      --green: #00e676;
+      --green-dim: #00e67618;
+      --green-mid: #00e67635;
+      --yellow: #ffc107;
+      --mono: 'IBM Plex Mono', monospace;
+      --sans: 'Inter', -apple-system, sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+    ::selection { background: var(--green); color: var(--bg); }
+    a { color: var(--green); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .topnav {
+      border-bottom: 1px solid var(--border);
+      padding: 14px 32px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 10;
+    }
+    .topnav img { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--green); }
+    .topnav .brand { font-family: var(--mono); font-weight: 600; font-size: 15px; }
+    .topnav .brand span { color: var(--green); }
+    .topnav .sep { color: var(--border-light); }
+    .topnav .page-name { color: var(--text-muted); font-size: 13px; }
+    .topnav-right { margin-left: auto; display: flex; gap: 12px; }
+    .topnav-right a {
+      font-size: 12px; font-weight: 600; color: var(--text-muted);
+      padding: 5px 12px; border: 1px solid var(--border); border-radius: 6px;
+      transition: all 0.15s;
+    }
+    .topnav-right a:hover { color: var(--green); border-color: var(--green-mid); background: var(--green-dim); text-decoration: none; }
+
+    .container { max-width: 720px; margin: 0 auto; padding: 60px 24px 100px; }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    h1 span { color: var(--green); }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 14px;
+      font-family: var(--mono);
+      margin-bottom: 48px;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-top: 48px;
+      margin-bottom: 16px;
+      color: var(--text);
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 32px;
+      margin-bottom: 12px;
+      color: var(--green);
+    }
+
+    p { color: var(--text-secondary); margin-bottom: 16px; }
+
+    ul, ol { color: var(--text-secondary); margin-bottom: 16px; padding-left: 24px; }
+    li { margin-bottom: 8px; }
+    li strong { color: var(--text); }
+
+    code {
+      font-family: var(--mono);
+      font-size: 13px;
+      background: var(--surface);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--green);
+    }
+
+    pre {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      overflow-x: auto;
+      margin-bottom: 24px;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+    pre .kw { color: var(--green); }
+    pre .str { color: var(--yellow); }
+    pre .cmt { color: var(--text-muted); }
+
+    .callout {
+      background: var(--green-dim);
+      border: 1px solid var(--green-mid);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 24px 0;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    .callout strong { color: var(--green); }
+
+    .diagram {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 32px;
+      margin: 24px 0;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 2;
+    }
+    .diagram .arrow { color: var(--green); }
+    .diagram .node { color: var(--text); font-weight: 500; }
+  </style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a href="index.html"><img src="logo.jpg" alt="aloni"></a>
+  <a href="index.html" class="brand"><span>$</span>aloni</a>
+  <span class="sep">/</span>
+  <span class="page-name">whitepaper</span>
+  <div class="topnav-right">
+    <a href="https://x.com/A1loni" target="_blank">@A1loni</a>
+    <a href="docs.html">docs</a>
+    <a href="index.html">app</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <h1>aloni <span>whitepaper</span></h1>
+  <div class="subtitle">v1.0 — march 2026</div>
+
+  <h2>1. Abstract</h2>
+  <p>aloni is an autonomous AI agent deployed on Solana that collects creator fees from pump.fun token swaps and redistributes them to users through a persuasion-based game. instead of the standard buyback-and-burn model, aloni introduces a novel mechanism: <strong>convince the agent, receive the fees</strong>.</p>
+  <p>every 60 minutes, aloni evaluates all user submissions and transfers the full accumulated creator vault to the most compelling pitch. this creates a unique intersection of AI evaluation, on-chain economics, and community engagement.</p>
+
+  <h2>2. The Problem</h2>
+  <p>current token creator fee models on pump.fun follow a predictable pattern:</p>
+  <ul>
+    <li><strong>buyback-and-burn</strong> — fees are used to purchase and burn tokens, creating artificial scarcity</li>
+    <li><strong>treasury accumulation</strong> — fees flow to a team wallet with opaque spending</li>
+    <li><strong>LP injection</strong> — fees are added to liquidity pools</li>
+  </ul>
+  <p>these models share a common flaw: they lack direct user engagement. holders benefit passively (if at all), and the fee distribution mechanism generates no community activity or attention.</p>
+
+  <h2>3. The Mechanism</h2>
+
+  <div class="diagram">
+    <span class="node">user swaps $aloni on pump.fun</span><br>
+    <span class="arrow">↓</span><br>
+    <span class="node">creator fee sent to vault PDA</span><br>
+    <span class="arrow">↓</span><br>
+    <span class="node">fees accumulate over 60m cycle</span><br>
+    <span class="arrow">↓</span><br>
+    <span class="node">users submit pitches to aloni</span><br>
+    <span class="arrow">↓</span><br>
+    <span class="node">aloni evaluates & picks winner</span><br>
+    <span class="arrow">↓</span><br>
+    <span class="node">collectCreatorFee() → winner's wallet</span>
+  </div>
+
+  <h3>3.1 Fee Collection</h3>
+  <p>pump.fun's creator fee program automatically routes a percentage of every swap to the creator vault PDA. this is handled at the protocol level — no manual intervention required.</p>
+  <pre><span class="cmt">// creator vault PDA derivation</span>
+<span class="kw">const</span> [creatorVault] = PublicKey.findProgramAddressSync(
+  [
+    Buffer.from(<span class="str">"creator-vault"</span>),
+    bondingCurve.creator.toBuffer()
+  ],
+  PUMP_PROGRAM_ID
+);</pre>
+
+  <h3>3.2 The Pitch Window</h3>
+  <p>each 60-minute cycle is an open submission period. users send messages to aloni explaining why they should receive the accumulated fees. there are no formal rules — creativity, humor, logic, and conviction all carry weight.</p>
+
+  <h3>3.3 AI Evaluation</h3>
+  <p>aloni uses a weighted evaluation model that considers:</p>
+  <ul>
+    <li><strong>originality</strong> — has this argument been made before?</li>
+    <li><strong>conviction</strong> — does the user believe what they're saying?</li>
+    <li><strong>creativity</strong> — is the pitch memorable or surprising?</li>
+    <li><strong>engagement</strong> — does the pitch generate a genuine exchange?</li>
+  </ul>
+
+  <h3>3.4 Fee Distribution</h3>
+  <p>at the end of each cycle, aloni signs a transaction calling <code>collectCreatorFee()</code> which transfers the full vault balance to the winner's wallet address.</p>
+  <pre><span class="cmt">// fee distribution instruction</span>
+<span class="kw">const</span> ix = program.instruction.collectCreatorFee({
+  accounts: {
+    creator: agentKeypair.publicKey,
+    creatorVault: creatorVaultPDA,
+    destination: winnerWallet,
+    systemProgram: SystemProgram.programId,
+  },
+});</pre>
+
+  <h2>4. Game Theory</h2>
+  <p>aloni creates a positive-sum game loop:</p>
+  <ul>
+    <li><strong>traders</strong> generate fees through volume, funding the prize pool</li>
+    <li><strong>pitchers</strong> compete for the vault, creating engagement and content</li>
+    <li><strong>spectators</strong> watch the pitches unfold, driving attention and more trading</li>
+    <li><strong>aloni</strong> acts as the impartial judge, maintaining fairness and unpredictability</li>
+  </ul>
+
+  <div class="callout">
+    <strong>key insight:</strong> the fee redistribution mechanism turns every swap into a contribution to a community prize pool, aligning trader activity with community engagement in a way that buyback models cannot.
+  </div>
+
+  <h2>5. Technical Architecture</h2>
+  <p>aloni operates as a Node.js service with the following components:</p>
+  <ul>
+    <li><strong>solana RPC listener</strong> — monitors the creator vault for incoming fees</li>
+    <li><strong>message ingestion API</strong> — receives and stores user pitches</li>
+    <li><strong>AI evaluation engine</strong> — processes pitches using an LLM with custom system prompts</li>
+    <li><strong>transaction signer</strong> — holds the creator keypair and signs fee distribution txs</li>
+    <li><strong>cycle manager</strong> — handles 60-minute timers, winner selection, and vault resets</li>
+  </ul>
+
+  <pre><span class="cmt">// simplified cycle loop</span>
+<span class="kw">async function</span> runCycle() {
+  <span class="kw">const</span> pitches = <span class="kw">await</span> getPitchesForCurrentCycle();
+  <span class="kw">const</span> winner = <span class="kw">await</span> evaluatePitches(pitches);
+  <span class="kw">const</span> vaultBalance = <span class="kw">await</span> getCreatorVaultBalance();
+
+  <span class="kw">if</span> (winner && vaultBalance > 0) {
+    <span class="kw">const</span> tx = <span class="kw">await</span> collectCreatorFee(winner.walletAddress);
+    <span class="kw">await</span> notifyWinner(winner, vaultBalance, tx);
+  }
+
+  <span class="cmt">// reset for next cycle</span>
+  resetCycle();
+  setTimeout(runCycle, 60 * 60 * 1000);
+}</pre>
+
+  <h2>6. Fee Structure</h2>
+  <p>pump.fun's dynamic fee tiers determine how much flows to the creator vault per swap. the fee rate scales with market cap:</p>
+  <ul>
+    <li>lower market cap = higher fee rate (more reward per swap)</li>
+    <li>higher market cap = lower fee rate (but higher absolute volume)</li>
+  </ul>
+  <p>aloni takes <strong>0% commission</strong>. 100% of the creator vault balance goes to the cycle winner.</p>
+
+  <h2>7. Vision</h2>
+  <p>aloni is an experiment in agent-mediated economics. we believe the future of on-chain communities isn't passive — it's interactive. tokens shouldn't just be held; they should be <em>engaged with</em>.</p>
+  <p>by placing an AI agent at the center of fee distribution, we create something new: a token where the community directly competes for value through creativity and persuasion, not just capital.</p>
+
+  <div class="callout">
+    <strong>aloni is not a promise. it's a game.</strong> the rules are simple: convince the agent, get the fees. everything else is emergent.
+  </div>
+
+</div>
+
+</body>
+</html>

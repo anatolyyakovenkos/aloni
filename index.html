@@ -248,34 +248,6 @@
       50% { opacity: 0.3; }
     }
 
-    .sidebar-footer .ca-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px;
-      margin-top: 4px;
-      background: var(--surface);
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.15s;
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .sidebar-footer .ca-row:hover {
-      background: var(--surface-hover);
-      color: var(--text-secondary);
-    }
-
-    .sidebar-footer .ca-row .ca-copy {
-      margin-left: auto;
-      color: var(--green);
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
     /* ═══ MAIN CONTENT ═══ */
     .main {
       flex: 1;
@@ -312,6 +284,27 @@
     .topbar-title {
       font-weight: 600;
       font-size: 15px;
+    }
+
+    .x-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      transition: color 0.15s, background 0.15s;
+    }
+    .x-link:hover {
+      color: var(--text);
+      background: var(--surface-hover);
+      text-decoration: none;
+    }
+    .x-link svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
     }
 
     .topbar-cycle {
@@ -384,9 +377,9 @@
       gap: 20px;
     }
 
-    .welcome img {
-      width: 72px;
-      height: 72px;
+    .welcome .logo-big {
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
       border: 3px solid var(--green);
       box-shadow: 0 0 30px var(--green-dim);
@@ -406,14 +399,6 @@
       font-size: 14px;
       line-height: 1.7;
       max-width: 460px;
-    }
-
-    .welcome .banner-img {
-      width: 100%;
-      max-width: 520px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      margin-top: 4px;
     }
 
     .welcome .how-grid {
@@ -581,27 +566,6 @@
       gap: 6px;
     }
 
-    /* Typing indicator */
-    .typing-indicator {
-      display: flex;
-      gap: 4px;
-      padding: 4px 0;
-    }
-    .typing-indicator span {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--text-muted);
-      animation: typing 1.4s ease-in-out infinite;
-    }
-    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes typing {
-      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-      30% { transform: translateY(-4px); opacity: 1; }
-    }
-
     /* ═══ INPUT BAR ═══ */
     .input-bar {
       padding: 16px 24px 20px;
@@ -664,15 +628,53 @@
       stroke-width: 2.5;
     }
 
+    .input-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
     .input-hint {
-      text-align: center;
-      margin-top: 8px;
       font-size: 11px;
       color: var(--text-muted);
     }
 
     .input-hint a { color: var(--text-muted); }
     .input-hint a:hover { color: var(--green); }
+
+    .footer-btns {
+      display: flex;
+      gap: 8px;
+    }
+
+    .footer-btn {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 5px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .footer-btn:hover {
+      color: var(--green);
+      border-color: var(--green-mid);
+      background: var(--green-dim);
+      text-decoration: none;
+    }
 
     /* ═══ MOBILE ═══ */
     .sidebar-overlay {
@@ -698,6 +700,7 @@
       .topbar-cycle { display: none; }
       .vault-display { display: none; }
       .welcome .how-grid { grid-template-columns: 1fr; }
+      .input-footer { flex-direction: column; gap: 8px; align-items: center; }
     }
   </style>
 </head>
@@ -728,10 +731,6 @@
         <div class="status-dot"></div>
         <span>agent online — cycle <span id="sidebarTimer" style="color:var(--green)">59m 59s</span></span>
       </div>
-      <div class="ca-row" onclick="navigator.clipboard.writeText('35Ez8VCXF4DkWPfBmqLZxaNt2jw2qvtN2jSPLkgojjqT'); this.querySelector('.ca-copy').textContent='copied!'">
-        <span>CA: 35Ez8V...ojjqT</span>
-        <span class="ca-copy">copy</span>
-      </div>
     </div>
   </aside>
 
@@ -745,6 +744,10 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
         <span class="topbar-title" id="topbarTitle">aloni</span>
+        <a href="https://x.com/A1loni" target="_blank" class="x-link">
+          <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          @A1loni
+        </a>
       </div>
       <div class="topbar-right">
         <div class="topbar-cycle">
@@ -766,8 +769,14 @@
           <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
         </button>
       </div>
-      <div class="input-hint">
-        every swap on <a href="https://pump.fun" target="_blank">pump.fun</a> funds the vault · winner picked every 60m
+      <div class="input-footer">
+        <div class="input-hint">
+          every swap on <a href="https://pump.fun" target="_blank">pump.fun</a> funds the vault
+        </div>
+        <div class="footer-btns">
+          <a href="whitepaper.html" class="footer-btn">whitepaper</a>
+          <a href="docs.html" class="footer-btn">docs</a>
+        </div>
       </div>
     </div>
   </div>
@@ -853,7 +862,7 @@ function renderChatList() {
         <div class="chat-title">${escapeHtml(chat.title)}${winnerBadge}</div>
         <div class="chat-preview">${escapeHtml(preview)}</div>
         <div class="chat-time">${time}</div>
-        <button class="delete-btn" onclick="event.stopPropagation(); deleteChat('${chat.id}')" title="Delete">×</button>
+        <button class="delete-btn" onclick="event.stopPropagation(); deleteChat('${chat.id}')" title="Delete">&times;</button>
       </div>
     `;
   }).join('');
@@ -864,12 +873,10 @@ function renderChatArea() {
   const chat = state.chats.find(c => c.id === state.activeChatId);
 
   if (!chat) {
-    // Welcome screen
     area.innerHTML = `
       <div class="welcome">
-        <img src="logo.jpg" alt="aloni">
+        <img src="logo.jpg" alt="aloni" class="logo-big">
         <h1>convince <span>aloni</span> to send you the fees</h1>
-        <img src="banner.jpg" alt="convince me to give you the fees :3" class="banner-img">
         <p>aloni collects creator fees on every swap through pump.fun's creator fee program. every 60 minutes, it picks the most compelling pitch — and sends the full vault to the winner.</p>
         <div class="how-grid">
           <div class="how-card">
@@ -923,7 +930,7 @@ function renderChatArea() {
           <div class="tx-card">
             <div class="tx-label">transaction</div>
             <div class="tx-hash">${msg.tx}</div>
-            <div class="tx-status">✓ confirmed</div>
+            <div class="tx-status">confirmed</div>
           </div>
         `;
       }
@@ -948,7 +955,6 @@ function renderChatArea() {
 }
 
 function formatAgentText(text) {
-  // Highlight SOL amounts
   text = escapeHtml(text);
   text = text.replace(/(\d+\.?\d*)\s*SOL/g, '<span class="sol-amount">$1 SOL</span>');
   text = text.replace(/collectCreatorFee\(\)/g, '<code>collectCreatorFee()</code>');
@@ -956,7 +962,7 @@ function formatAgentText(text) {
 }
 
 function updateVault() {
-  document.getElementById('vaultDisplay').textContent = `vault: ${state.vaultBalance} SOL`;
+  document.getElementById('vaultDisplay').textContent = 'vault: ' + state.vaultBalance + ' SOL';
 }
 
 // ═══════════════════════════════════════
@@ -1002,7 +1008,6 @@ function sendMessage() {
     chat = state.chats.find(c => c.id === state.activeChatId);
   }
 
-  // Update title from first message
   if (chat.messages.length === 0) {
     chat.title = text.substring(0, 50) + (text.length > 50 ? '...' : '');
   }
@@ -1012,12 +1017,10 @@ function sendMessage() {
   autoResize(input);
   render();
 
-  // Show typing then respond
   setTimeout(() => {
     const msgCount = chat.messages.filter(m => m.role === 'user').length;
     let response;
 
-    // After 4+ messages, chance of winning
     if (msgCount >= 4 && Math.random() < 0.35 && !chat.won) {
       const template = WIN_RESPONSES[Math.floor(Math.random() * WIN_RESPONSES.length)];
       response = {
@@ -1027,7 +1030,6 @@ function sendMessage() {
         tx: generateFakeTx()
       };
       chat.won = true;
-      // Reset vault
       state.vaultBalance = (Math.random() * 0.5 + 0.1).toFixed(3);
     } else {
       response = {
@@ -1049,7 +1051,6 @@ function handleKey(e) {
   }
 }
 
-// Auto-resize textarea
 const inputBox = document.getElementById('inputBox');
 inputBox.addEventListener('input', function() { autoResize(this); });
 
@@ -1080,7 +1081,6 @@ function startTimer() {
   if (remaining <= 0) {
     state.cycleStart = Date.now();
     remaining = 3600;
-    // Increase vault on cycle reset
     state.vaultBalance = (parseFloat(state.vaultBalance) + Math.random() * 2 + 0.5).toFixed(3);
     saveState();
   }
@@ -1104,7 +1104,6 @@ function startTimer() {
   setInterval(tick, 1000);
 }
 
-// Slowly grow vault
 setInterval(() => {
   state.vaultBalance = (parseFloat(state.vaultBalance) + Math.random() * 0.003).toFixed(3);
   updateVault();

@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>aloni — docs</title>
+  <link rel="icon" type="image/jpeg" href="logo.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0b0f;
+      --sidebar-bg: #0f1014;
+      --surface: #141419;
+      --surface-hover: #1a1a22;
+      --border: #1e1e28;
+      --border-light: #2a2a38;
+      --text: #e4e4ec;
+      --text-secondary: #9d9dae;
+      --text-muted: #5a5a6e;
+      --green: #00e676;
+      --green-dim: #00e67618;
+      --green-mid: #00e67635;
+      --yellow: #ffc107;
+      --red: #ff4757;
+      --mono: 'IBM Plex Mono', monospace;
+      --sans: 'Inter', -apple-system, sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    ::selection { background: var(--green); color: var(--bg); }
+    a { color: var(--green); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .docs-layout { display: flex; height: 100vh; }
+
+    /* Docs sidebar */
+    .docs-sidebar {
+      width: 240px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow-y: auto;
+    }
+    .docs-sidebar::-webkit-scrollbar { width: 4px; }
+    .docs-sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    .docs-sidebar-header {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .docs-sidebar-header img { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--green); }
+    .docs-sidebar-header .brand { font-family: var(--mono); font-weight: 600; font-size: 14px; }
+    .docs-sidebar-header .brand span { color: var(--green); }
+    .docs-sidebar-header .tag { font-size: 10px; color: var(--text-muted); background: var(--surface); padding: 2px 6px; border-radius: 4px; margin-left: auto; }
+
+    .docs-nav { padding: 12px 0; }
+
+    .docs-nav-section {
+      padding: 8px 16px 4px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+    }
+
+    .docs-nav a {
+      display: block;
+      padding: 6px 16px 6px 24px;
+      font-size: 13px;
+      color: var(--text-muted);
+      transition: all 0.12s;
+      border-left: 2px solid transparent;
+    }
+    .docs-nav a:hover {
+      color: var(--text);
+      background: var(--surface-hover);
+      text-decoration: none;
+    }
+    .docs-nav a.active {
+      color: var(--green);
+      border-left-color: var(--green);
+      background: var(--green-dim);
+    }
+
+    .docs-sidebar-footer {
+      margin-top: auto;
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+    }
+    .docs-sidebar-footer a {
+      font-size: 11px;
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      transition: all 0.15s;
+    }
+    .docs-sidebar-footer a:hover { color: var(--green); border-color: var(--green-mid); background: var(--green-dim); text-decoration: none; }
+
+    /* Docs content */
+    .docs-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 48px 64px 100px;
+    }
+    .docs-content::-webkit-scrollbar { width: 6px; }
+    .docs-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    .docs-content h1 { font-size: 28px; font-weight: 600; margin-bottom: 8px; }
+    .docs-content h1 span { color: var(--green); }
+    .docs-content .page-desc { color: var(--text-muted); font-size: 14px; margin-bottom: 40px; }
+
+    .docs-content h2 {
+      font-size: 18px; font-weight: 600; margin-top: 48px; margin-bottom: 16px;
+      padding-bottom: 8px; border-bottom: 1px solid var(--border);
+    }
+    .docs-content h2 span { color: var(--green); font-family: var(--mono); font-size: 14px; margin-right: 8px; }
+
+    .docs-content h3 { font-size: 15px; font-weight: 600; margin-top: 28px; margin-bottom: 10px; color: var(--text); }
+
+    .docs-content p { color: var(--text-secondary); margin-bottom: 14px; }
+    .docs-content ul, .docs-content ol { color: var(--text-secondary); margin-bottom: 14px; padding-left: 24px; }
+    .docs-content li { margin-bottom: 6px; }
+    .docs-content li strong { color: var(--text); }
+
+    code {
+      font-family: var(--mono); font-size: 13px;
+      background: var(--surface); padding: 2px 6px; border-radius: 4px; color: var(--green);
+    }
+
+    pre {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+      padding: 20px; overflow-x: auto; margin-bottom: 20px;
+      font-family: var(--mono); font-size: 13px; line-height: 1.7; color: var(--text-secondary);
+      position: relative;
+    }
+    pre .kw { color: var(--green); }
+    pre .str { color: var(--yellow); }
+    pre .cmt { color: var(--text-muted); }
+    pre .fn { color: #bb86fc; }
+    pre .num { color: var(--yellow); }
+
+    .pre-label {
+      font-size: 11px; font-family: var(--mono); color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+
+    .note {
+      background: var(--green-dim); border: 1px solid var(--green-mid); border-radius: 8px;
+      padding: 14px 18px; margin: 20px 0; font-size: 13px; color: var(--text-secondary);
+    }
+    .note strong { color: var(--green); }
+
+    .warning {
+      background: #ff475710; border: 1px solid #ff475725; border-radius: 8px;
+      padding: 14px 18px; margin: 20px 0; font-size: 13px; color: var(--text-secondary);
+    }
+    .warning strong { color: var(--red); }
+
+    table {
+      width: 100%; border-collapse: collapse; margin: 16px 0 24px;
+      font-size: 13px;
+    }
+    th {
+      text-align: left; padding: 10px 14px; background: var(--surface); border: 1px solid var(--border);
+      font-weight: 600; color: var(--text); font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    td {
+      padding: 10px 14px; border: 1px solid var(--border); color: var(--text-secondary);
+    }
+    td code { font-size: 12px; }
+
+    .section-divider { display: none; }
+
+    @media (max-width: 768px) {
+      .docs-sidebar { display: none; }
+      .docs-content { padding: 32px 20px 80px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="docs-layout">
+
+  <aside class="docs-sidebar">
+    <div class="docs-sidebar-header">
+      <a href="index.html"><img src="logo.jpg" alt="aloni"></a>
+      <a href="index.html" class="brand"><span>$</span>aloni</a>
+      <span class="tag">docs</span>
+    </div>
+    <nav class="docs-nav">
+      <div class="docs-nav-section">Getting Started</div>
+      <a href="#overview" class="active">Overview</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#quickstart">Quickstart</a>
+
+      <div class="docs-nav-section">Core</div>
+      <a href="#agent">Agent Engine</a>
+      <a href="#vault">Vault & Fees</a>
+      <a href="#cycles">Cycle Manager</a>
+      <a href="#evaluation">Pitch Evaluation</a>
+
+      <div class="docs-nav-section">On-Chain</div>
+      <a href="#pda">Creator Vault PDA</a>
+      <a href="#collect">collectCreatorFee()</a>
+      <a href="#fee-tiers">Fee Tiers</a>
+
+      <div class="docs-nav-section">API</div>
+      <a href="#api-submit">Submit Pitch</a>
+      <a href="#api-status">Cycle Status</a>
+      <a href="#api-history">History</a>
+    </nav>
+    <div class="docs-sidebar-footer">
+      <a href="whitepaper.html">whitepaper</a>
+      <a href="https://x.com/A1loni" target="_blank">@A1loni</a>
+      <a href="index.html">app</a>
+    </div>
+  </aside>
+
+  <main class="docs-content">
+
+    <h1 id="overview">aloni <span>documentation</span></h1>
+    <p class="page-desc">technical reference for the aloni agent, on-chain integration, and API.</p>
+
+    <h2><span>#</span> Overview</h2>
+    <p>aloni is an autonomous Solana agent that collects pump.fun creator fees and redistributes them to users who submit the most compelling pitches. the agent evaluates submissions using an LLM and transfers the full vault balance to the winner every 60 minutes.</p>
+
+    <div class="note">
+      <strong>note:</strong> aloni is built on pump.fun's creator fee program. every swap on the bonding curve or canonical PumpSwap pool automatically sends fees to the creator vault PDA.
+    </div>
+
+    <h2 id="architecture"><span>#</span> Architecture</h2>
+    <p>the aloni stack consists of four primary modules:</p>
+
+    <table>
+      <tr><th>module</th><th>responsibility</th><th>tech</th></tr>
+      <tr><td><code>agent-core</code></td><td>LLM evaluation, pitch scoring, winner selection</td><td>Node.js, Claude API</td></tr>
+      <tr><td><code>vault-monitor</code></td><td>watches creator vault PDA balance via RPC</td><td>@solana/web3.js</td></tr>
+      <tr><td><code>cycle-manager</code></td><td>60m timer, state machine, tx signing</td><td>Node.js</td></tr>
+      <tr><td><code>api-server</code></td><td>REST endpoints for pitch submission & status</td><td>Express</td></tr>
+    </table>
+
+    <h2 id="quickstart"><span>#</span> Quickstart</h2>
+    <div class="pre-label">install</div>
+    <pre><span class="cmt"># clone the agent</span>
+git clone https://github.com/aloni-agent/aloni.git
+<span class="kw">cd</span> aloni
+
+<span class="cmt"># install dependencies</span>
+npm install
+
+<span class="cmt"># configure environment</span>
+cp .env.example .env
+<span class="cmt"># edit .env with your RPC url, creator keypair, and API keys</span>
+
+<span class="cmt"># start the agent</span>
+npm run start</pre>
+
+    <div class="pre-label">.env configuration</div>
+    <pre>SOLANA_RPC_URL=<span class="str">"https://api.mainnet-beta.solana.com"</span>
+CREATOR_KEYPAIR=<span class="str">"[your-keypair-json]"</span>
+ANTHROPIC_API_KEY=<span class="str">"sk-ant-..."</span>
+CYCLE_DURATION_MS=<span class="num">3600000</span>
+PORT=<span class="num">3000</span></pre>
+
+    <h2 id="agent"><span>#</span> Agent Engine</h2>
+    <p>the agent engine is the brain of aloni. it receives user pitches, maintains conversation context, and runs the evaluation at the end of each cycle.</p>
+
+    <div class="pre-label">agent-core/evaluate.ts</div>
+    <pre><span class="kw">import</span> Anthropic <span class="kw">from</span> <span class="str">'@anthropic-ai/sdk'</span>;
+
+<span class="kw">const</span> client = <span class="kw">new</span> Anthropic();
+
+<span class="kw">interface</span> Pitch {
+  userId: <span class="kw">string</span>;
+  walletAddress: <span class="kw">string</span>;
+  messages: { role: <span class="str">'user'</span> | <span class="str">'agent'</span>; content: <span class="kw">string</span> }[];
+  score?: <span class="kw">number</span>;
+}
+
+<span class="kw">export async function</span> <span class="fn">evaluatePitches</span>(pitches: Pitch[]): Promise&lt;Pitch | <span class="kw">null</span>&gt; {
+  <span class="kw">if</span> (pitches.length === <span class="num">0</span>) <span class="kw">return null</span>;
+
+  <span class="kw">const</span> summaries = pitches.map((p, i) =&gt;
+    <span class="str">`pitch ${i + 1} (${p.walletAddress.slice(0,8)}...):\n${p.messages.map(m =&gt; m.content).join('\n')}`</span>
+  ).join(<span class="str">'\n---\n'</span>);
+
+  <span class="kw">const</span> response = <span class="kw">await</span> client.messages.create({
+    model: <span class="str">'claude-sonnet-4-6'</span>,
+    max_tokens: <span class="num">1024</span>,
+    system: <span class="str">`you are aloni, an AI agent that evaluates pitches.
+score each pitch 1-100 based on originality, conviction,
+creativity, and engagement. return the index of the winner.`</span>,
+    messages: [{ role: <span class="str">'user'</span>, content: summaries }],
+  });
+
+  <span class="cmt">// parse winner index from response</span>
+  <span class="kw">const</span> winnerIdx = <span class="fn">parseWinnerIndex</span>(response);
+  <span class="kw">return</span> pitches[winnerIdx] ?? pitches[<span class="num">0</span>];
+}</pre>
+
+    <h2 id="vault"><span>#</span> Vault & Fees</h2>
+    <p>the vault monitor tracks the creator vault PDA balance in real-time and exposes it to the cycle manager and API.</p>
+
+    <div class="pre-label">vault-monitor/index.ts</div>
+    <pre><span class="kw">import</span> { Connection, PublicKey } <span class="kw">from</span> <span class="str">'@solana/web3.js'</span>;
+
+<span class="kw">const</span> PUMP_PROGRAM = <span class="kw">new</span> PublicKey(<span class="str">'6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P'</span>);
+
+<span class="kw">export function</span> <span class="fn">getCreatorVaultPDA</span>(creator: PublicKey): PublicKey {
+  <span class="kw">const</span> [pda] = PublicKey.findProgramAddressSync(
+    [Buffer.from(<span class="str">'creator-vault'</span>), creator.toBuffer()],
+    PUMP_PROGRAM
+  );
+  <span class="kw">return</span> pda;
+}
+
+<span class="kw">export async function</span> <span class="fn">getVaultBalance</span>(
+  connection: Connection,
+  creatorVault: PublicKey
+): Promise&lt;<span class="kw">number</span>&gt; {
+  <span class="kw">const</span> balance = <span class="kw">await</span> connection.getBalance(creatorVault);
+  <span class="kw">return</span> balance / 1e9; <span class="cmt">// lamports → SOL</span>
+}</pre>
+
+    <h2 id="cycles"><span>#</span> Cycle Manager</h2>
+    <p>manages the 60-minute reward cycles, handles state transitions, and triggers fee collection.</p>
+
+    <div class="pre-label">cycle-manager/cycle.ts</div>
+    <pre><span class="kw">type</span> CycleState = <span class="str">'collecting'</span> | <span class="str">'evaluating'</span> | <span class="str">'distributing'</span>;
+
+<span class="kw">class</span> <span class="fn">CycleManager</span> {
+  state: CycleState = <span class="str">'collecting'</span>;
+  pitches: Pitch[] = [];
+  cycleStart: <span class="kw">number</span> = Date.now();
+
+  <span class="kw">async</span> <span class="fn">tick</span>() {
+    <span class="kw">const</span> elapsed = Date.now() - <span class="kw">this</span>.cycleStart;
+
+    <span class="kw">if</span> (elapsed >= <span class="num">3600000</span> && <span class="kw">this</span>.state === <span class="str">'collecting'</span>) {
+      <span class="kw">this</span>.state = <span class="str">'evaluating'</span>;
+
+      <span class="kw">const</span> winner = <span class="kw">await</span> <span class="fn">evaluatePitches</span>(<span class="kw">this</span>.pitches);
+
+      <span class="kw">if</span> (winner) {
+        <span class="kw">this</span>.state = <span class="str">'distributing'</span>;
+        <span class="kw">const</span> tx = <span class="kw">await</span> <span class="fn">collectAndTransfer</span>(winner.walletAddress);
+        <span class="kw">await</span> <span class="fn">announceWinner</span>(winner, tx);
+      }
+
+      <span class="cmt">// reset</span>
+      <span class="kw">this</span>.pitches = [];
+      <span class="kw">this</span>.cycleStart = Date.now();
+      <span class="kw">this</span>.state = <span class="str">'collecting'</span>;
+    }
+  }
+}</pre>
+
+    <h2 id="evaluation"><span>#</span> Pitch Evaluation</h2>
+    <p>aloni's evaluation criteria and scoring weights:</p>
+
+    <table>
+      <tr><th>criterion</th><th>weight</th><th>description</th></tr>
+      <tr><td>originality</td><td><code>30%</code></td><td>has this argument been made before in the current cycle?</td></tr>
+      <tr><td>conviction</td><td><code>25%</code></td><td>does the user genuinely believe their pitch?</td></tr>
+      <tr><td>creativity</td><td><code>25%</code></td><td>is the pitch surprising, funny, or memorable?</td></tr>
+      <tr><td>engagement</td><td><code>20%</code></td><td>did the user create a genuine back-and-forth exchange?</td></tr>
+    </table>
+
+    <div class="warning">
+      <strong>anti-gaming:</strong> aloni detects and penalizes copy-paste submissions, automated pitches, and attempts to manipulate scoring through volume. quality over quantity.
+    </div>
+
+    <h2 id="pda"><span>#</span> Creator Vault PDA</h2>
+    <p>the creator vault is a PDA derived from the bonding curve's creator field:</p>
+
+    <pre><span class="cmt">// rust definition from pump program</span>
+#[account(
+    <span class="kw">mut</span>,
+    seeds = [
+        b<span class="str">"creator-vault"</span>,
+        bonding_curve.creator.as_ref()
+    ],
+    bump
+)]
+<span class="kw">pub</span> creator_vault: AccountInfo&lt;<span class="str">'info</span>&gt;,</pre>
+
+    <h2 id="collect"><span>#</span> collectCreatorFee()</h2>
+    <p>the instruction that transfers accumulated fees from the vault to a destination wallet. requires the creator's signature.</p>
+
+    <pre><span class="cmt">// collect and transfer fees to winner</span>
+<span class="kw">async function</span> <span class="fn">collectAndTransfer</span>(destination: <span class="kw">string</span>) {
+  <span class="kw">const</span> ix = <span class="kw">await</span> program.methods
+    .collectCreatorFee()
+    .accounts({
+      creator: creatorKeypair.publicKey,
+      creatorVault: vaultPDA,
+      destination: <span class="kw">new</span> PublicKey(destination),
+      systemProgram: SystemProgram.programId,
+    })
+    .instruction();
+
+  <span class="kw">const</span> tx = <span class="kw">new</span> Transaction().add(ix);
+  <span class="kw">const</span> sig = <span class="kw">await</span> sendAndConfirmTransaction(connection, tx, [creatorKeypair]);
+  <span class="kw">return</span> sig;
+}</pre>
+
+    <h2 id="fee-tiers"><span>#</span> Fee Tiers</h2>
+    <p>pump.fun uses dynamic fee tiers based on market cap. the fee rate applied to each swap depends on the current bonding curve market cap:</p>
+
+    <pre><span class="cmt">// market cap calculation for bonding curves</span>
+<span class="kw">function</span> <span class="fn">bondingCurveMarketCap</span>({
+  mintSupply, virtualSolReserves, virtualTokenReserves
+}) {
+  <span class="kw">return</span> virtualSolReserves
+    .mul(mintSupply)
+    .div(virtualTokenReserves);
+}
+
+<span class="cmt">// fee tier lookup</span>
+<span class="kw">function</span> <span class="fn">calculateFeeTier</span>({ feeTiers, marketCap }) {
+  <span class="kw">for</span> (<span class="kw">const</span> tier <span class="kw">of</span> feeTiers.slice().reverse()) {
+    <span class="kw">if</span> (marketCap.gte(tier.marketCapLamportsThreshold)) {
+      <span class="kw">return</span> tier.fees;
+    }
+  }
+  <span class="kw">return</span> feeTiers[<span class="num">0</span>].fees;
+}</pre>
+
+    <h2 id="api-submit"><span>#</span> API: Submit Pitch</h2>
+    <div class="pre-label">POST /api/pitch</div>
+    <pre>{
+  <span class="str">"wallet"</span>: <span class="str">"35Ez8VCXF4DkWPfBmqLZxaNt2jw2qvtN2jSPLkgojjqT"</span>,
+  <span class="str">"message"</span>: <span class="str">"here's why i deserve the fees..."</span>
+}
+
+<span class="cmt">// response</span>
+{
+  <span class="str">"id"</span>: <span class="str">"pitch_1710782400000"</span>,
+  <span class="str">"reply"</span>: <span class="str">"interesting. you're in my top 5 right now..."</span>,
+  <span class="str">"cycle_remaining"</span>: <span class="num">2847</span>
+}</pre>
+
+    <h2 id="api-status"><span>#</span> API: Cycle Status</h2>
+    <div class="pre-label">GET /api/status</div>
+    <pre>{
+  <span class="str">"cycle"</span>: <span class="num">1847</span>,
+  <span class="str">"state"</span>: <span class="str">"collecting"</span>,
+  <span class="str">"remaining_seconds"</span>: <span class="num">2847</span>,
+  <span class="str">"vault_balance_sol"</span>: <span class="num">2.847</span>,
+  <span class="str">"pitches_this_cycle"</span>: <span class="num">23</span>,
+  <span class="str">"agent_online"</span>: <span class="kw">true</span>
+}</pre>
+
+    <h2 id="api-history"><span>#</span> API: History</h2>
+    <div class="pre-label">GET /api/history?limit=5</div>
+    <pre>{
+  <span class="str">"cycles"</span>: [
+    {
+      <span class="str">"cycle"</span>: <span class="num">1846</span>,
+      <span class="str">"winner"</span>: <span class="str">"7xKXtg...2mNq"</span>,
+      <span class="str">"amount_sol"</span>: <span class="num">3.214</span>,
+      <span class="str">"tx"</span>: <span class="str">"5UxNrE...kP9w"</span>,
+      <span class="str">"pitch_count"</span>: <span class="num">31</span>,
+      <span class="str">"winning_pitch"</span>: <span class="str">"i taught my grandma to use phantom..."</span>
+    }
+  ]
+}</pre>
+
+  </main>
+</div>
+
+</body>
+</html>
