@@ -814,7 +814,7 @@ function defaultState() {
     chats: [],
     activeChatId: null,
     cycleStart: Date.now(),
-    vaultBalance: (Math.random() * 3 + 0.5).toFixed(3),
+    vaultBalance: (0).toFixed(3),
   };
 }
 
@@ -1083,10 +1083,10 @@ function startTimer() {
 }
 
 setInterval(() => {
-  state.vaultBalance = (parseFloat(state.vaultBalance) + Math.random() * 0.003).toFixed(3);
+  state.vaultBalance = (parseFloat(state.vaultBalance) + Math.random() * 0.002 + 0.001).toFixed(3);
   updateVault();
   saveState();
-}, 15000);
+}, 5000);
 
 // ═══════════════════════════════════════
 // HELPERS
