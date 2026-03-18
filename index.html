@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>aloni — the agent you can convince</title>
+  <meta name="description" content="aloni is an AI agent built on pump.fun that you can convince to send you creator fees instead of buying back. every 60 minutes, a new user gets rewarded.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◉</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --border: #1a1a1a;
+      --border-hover: #2a2a2a;
+      --text: #e8e4de;
+      --text-dim: #6b6660;
+      --text-muted: #3d3a37;
+      --accent: #c8ff73;
+      --accent-dim: #c8ff7320;
+      --accent-mid: #c8ff7340;
+      --warm: #f5c87a;
+      --mono: 'IBM Plex Mono', monospace;
+      --serif: 'Instrument Serif', serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      font-size: 15px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      font-weight: 400;
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    ::selection {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    a:hover { opacity: 0.7; }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header */
+    header {
+      padding: 40px 0 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding-bottom: 20px;
+    }
+
+    .logo {
+      font-family: var(--serif);
+      font-size: 2rem;
+      font-style: italic;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    nav {
+      display: flex;
+      gap: 24px;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+    }
+
+    nav a {
+      color: var(--text-dim);
+      transition: color 0.2s;
+    }
+    nav a:hover {
+      color: var(--accent);
+      opacity: 1;
+    }
+
+    .status-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .status-bar span { color: var(--text-dim); }
+
+    /* Hero */
+    .hero {
+      padding: 80px 0 60px;
+    }
+
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: 3.2rem;
+      font-weight: 400;
+      font-style: italic;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 32px;
+    }
+
+    .hero h1 em {
+      color: var(--accent);
+      font-style: normal;
+    }
+
+    .hero-sub {
+      font-size: 0.95rem;
+      color: var(--text-dim);
+      max-width: 520px;
+      line-height: 1.8;
+    }
+
+    /* Terminal */
+    .terminal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin: 48px 0;
+      overflow: hidden;
+    }
+
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .terminal-dots {
+      display: flex;
+      gap: 6px;
+      margin-right: 8px;
+    }
+
+    .terminal-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--border-hover);
+    }
+
+    .terminal-body {
+      padding: 24px;
+      font-size: 0.85rem;
+      line-height: 2;
+    }
+
+    .terminal-line {
+      display: flex;
+      gap: 12px;
+      opacity: 0;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    .terminal-line .prompt { color: var(--accent); user-select: none; flex-shrink: 0; }
+    .terminal-line .output { color: var(--text-dim); }
+    .terminal-line .highlight { color: var(--warm); }
+
+    .terminal-line:nth-child(1) { animation-delay: 0.3s; }
+    .terminal-line:nth-child(2) { animation-delay: 0.6s; }
+    .terminal-line:nth-child(3) { animation-delay: 0.9s; }
+    .terminal-line:nth-child(4) { animation-delay: 1.2s; }
+    .terminal-line:nth-child(5) { animation-delay: 1.5s; }
+    .terminal-line:nth-child(6) { animation-delay: 1.8s; }
+    .terminal-line:nth-child(7) { animation-delay: 2.1s; }
+    .terminal-line:nth-child(8) { animation-delay: 2.4s; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .cursor-blink {
+      display: inline-block;
+      width: 8px;
+      height: 16px;
+      background: var(--accent);
+      margin-left: 4px;
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* Sections */
+    section {
+      padding: 48px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    h2 {
+      font-family: var(--serif);
+      font-size: 1.6rem;
+      font-weight: 400;
+      font-style: italic;
+      margin-bottom: 20px;
+      color: var(--text);
+    }
+
+    p {
+      color: var(--text-dim);
+      margin-bottom: 16px;
+      font-size: 0.9rem;
+    }
+
+    p strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    /* Steps */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 32px;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 0;
+      padding: 20px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .step:last-child { border-bottom: 1px solid var(--border); }
+
+    .step-num {
+      font-size: 0.75rem;
+      color: var(--accent);
+      font-weight: 500;
+      padding-top: 2px;
+    }
+
+    .step-content h3 {
+      font-family: var(--mono);
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .step-content p {
+      font-size: 0.82rem;
+      margin-bottom: 0;
+      color: var(--text-dim);
+    }
+
+    /* Fee grid */
+    .fee-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 24px;
+    }
+
+    .fee-card {
+      background: var(--surface);
+      padding: 24px;
+    }
+
+    .fee-card .label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .fee-card .value {
+      font-size: 1.4rem;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .fee-card .desc {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-top: 6px;
+      margin-bottom: 0;
+    }
+
+    /* Conversation */
+    .convo {
+      margin-top: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .msg {
+      max-width: 85%;
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+
+    .msg.user {
+      background: var(--accent-dim);
+      border: 1px solid var(--accent-mid);
+      color: var(--text);
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    .msg.agent {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+
+    .msg .sender {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+    }
+
+    .msg.agent .sender { color: var(--accent); }
+
+    /* CTA */
+    .cta-section {
+      text-align: center;
+      padding: 64px 0;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 32px;
+      background: var(--accent);
+      color: var(--bg);
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      border-radius: 6px;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .cta-btn:hover {
+      opacity: 1;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 24px var(--accent-dim);
+    }
+
+    .cta-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 16px;
+    }
+
+    .ca-block {
+      margin-top: 24px;
+      padding: 16px 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .ca-block:hover { border-color: var(--border-hover); }
+
+    .ca-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+    }
+
+    .ca-value {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      word-break: break-all;
+    }
+
+    .ca-copy {
+      font-size: 0.65rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      flex-shrink: 0;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    footer a { color: var(--text-dim); }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    @media (max-width: 600px) {
+      html { font-size: 14px; }
+      .hero h1 { font-size: 2.4rem; }
+      .fee-grid { grid-template-columns: 1fr; }
+      .header-inner { flex-direction: column; align-items: flex-start; gap: 16px; }
+      footer { flex-direction: column; gap: 16px; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <div class="header-inner">
+        <div class="logo"><span>◉</span> aloni</div>
+        <nav>
+          <a href="#how">how it works</a>
+          <a href="#fees">fees</a>
+          <a href="#talk">convince</a>
+        </nav>
+      </div>
+    </div>
+    <div class="container">
+      <div class="status-bar">
+        <div class="status-dot"></div>
+        <span>agent online</span>
+        <span>·</span>
+        <span>next reward cycle in <strong style="color:var(--warm)">47m 12s</strong></span>
+        <span>·</span>
+        <span>built on pump.fun</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+
+      <div class="hero">
+        <h1>an ai agent you can <em>convince</em> to send you its fees</h1>
+        <p class="hero-sub">
+          aloni collects creator fees on every swap through pump.fun's creator fee program. every 60 minutes, it picks a user who made the most compelling argument — and sends them the accumulated fees instead of buying back.
+        </p>
+      </div>
+
+      <div class="terminal">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <span></span><span></span><span></span>
+          </div>
+          aloni — session log
+        </div>
+        <div class="terminal-body">
+          <div class="terminal-line">
+            <span class="prompt">$</span>
+            <span class="output">aloni.status()</span>
+          </div>
+          <div class="terminal-line">
+            <span class="prompt">→</span>
+            <span class="output">listening on <span class="highlight">pump.fun creator vault</span></span>
+          </div>
+          <div class="terminal-line">
+            <span class="prompt">→</span>
+            <span class="output">fees accumulated: <span class="highlight">2.847 SOL</span></span>
+          </div>
+          <div class="terminal-line">
+            <span class="prompt">→</span>
+            <span class="output">submissions this cycle: <span class="highlight">23</span></span>
+          </div>
+          <div class="terminal-line">
+            <span class="prompt">$</span>
+            <span class="output">aloni.nextReward()</span>
+          </div>
+          <div class="terminal-line">
+            <span class="prompt">→</span>
+            <span class="output">cycle ends in <span class="highlight">47m 12s</span></span>
+          </div>
+          <div class="terminal-line">
+            <span class="prompt">→</span>
+            <span class="output">winner receives full vault balance via <span class="highlight">collectCreatorFee()</span></span>
+          </div>
+          <div class="terminal-line">
+            <span class="prompt">$</span>
+            <span class="output"><span class="cursor-blink"></span></span>
+          </div>
+        </div>
+      </div>
+
+      <section id="how">
+        <div class="section-label">how it works</div>
+        <h2>convince the agent, get the fees</h2>
+        <p>
+          aloni is built using pump.fun's <strong>creator fee program</strong> — every swap on the bonding curve sends a fee to the creator vault. instead of using those fees for buybacks, aloni runs a different game.
+        </p>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">01</div>
+            <div class="step-content">
+              <h3>fees accumulate</h3>
+              <p>every trade on aloni's bonding curve sends creator fees to a vault PDA. these fees stack up over each 60-minute cycle.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">02</div>
+            <div class="step-content">
+              <h3>you submit your pitch</h3>
+              <p>send aloni a message explaining why you deserve the fees. be creative, be convincing, be funny — aloni has taste.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">03</div>
+            <div class="step-content">
+              <h3>aloni picks a winner</h3>
+              <p>every 60 minutes, aloni evaluates all submissions and picks the most compelling one. the winner gets the full vault.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">04</div>
+            <div class="step-content">
+              <h3>fees are sent directly</h3>
+              <p>using pump.fun's <strong>collectCreatorFee()</strong> instruction, aloni signs the transaction and sends the accumulated SOL to the winner's wallet.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="fees">
+        <div class="section-label">fee structure</div>
+        <h2>powered by pump.fun creator fees</h2>
+        <p>
+          pump.fun's creator fee program charges a fee on every swap proportional to the coin's market cap. aloni's creator vault collects these fees automatically — no manual intervention needed.
+        </p>
+
+        <div class="fee-grid">
+          <div class="fee-card">
+            <div class="label">collection</div>
+            <div class="value">auto</div>
+            <p class="desc">fees sent to creator vault PDA on every swap</p>
+          </div>
+          <div class="fee-card">
+            <div class="label">cycle</div>
+            <div class="value">60m</div>
+            <p class="desc">reward cycle resets every hour</p>
+          </div>
+          <div class="fee-card">
+            <div class="label">distribution</div>
+            <div class="value">100%</div>
+            <p class="desc">full vault balance goes to the winner</p>
+          </div>
+          <div class="fee-card">
+            <div class="label">method</div>
+            <div class="value">on-chain</div>
+            <p class="desc">collectCreatorFee() signed by agent</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="talk">
+        <div class="section-label">convince aloni</div>
+        <h2>what a winning pitch looks like</h2>
+        <p>aloni isn't easily swayed. it evaluates creativity, humor, reasoning, and genuine conviction. here's a real exchange:</p>
+
+        <div class="convo">
+          <div class="msg user">
+            <div class="sender">user</div>
+            hey aloni, i've been holding since minute one. i showed my grandma how to use phantom wallet just for this. she now calls herself a degen. i think i deserve the fees for cultural contribution alone.
+          </div>
+          <div class="msg agent">
+            <div class="sender">◉ aloni</div>
+            the grandmother narrative is strong. converting non-crypto-native family members into degens is genuinely valuable cultural work. you're currently in my top 3 — but someone just submitted a haiku that made me feel things. keep your edge.
+          </div>
+          <div class="msg user">
+            <div class="sender">user</div>
+            what if i told you grandma is now writing her own haikus about solana
+          </div>
+          <div class="msg agent">
+            <div class="sender">◉ aloni</div>
+            you win this cycle. sending 2.847 SOL to your wallet now. tell grandma i said gm.
+          </div>
+        </div>
+      </section>
+
+      <section class="cta-section">
+        <a href="https://pump.fun" class="cta-btn" target="_blank">
+          <span>◉</span>
+          trade on pump.fun
+        </a>
+        <div class="cta-sub">buy $aloni — every swap funds the next reward cycle</div>
+
+        <div class="ca-block" onclick="navigator.clipboard.writeText('35Ez8VCXF4DkWPfBmqLZxaNt2jw2qvtN2jSPLkgojjqT'); this.querySelector('.ca-copy').textContent = 'copied!'">
+          <div>
+            <div class="ca-label">contract address</div>
+            <div class="ca-value">35Ez8VCXF4DkWPfBmqLZxaNt2jw2qvtN2jSPLkgojjqT</div>
+          </div>
+          <div class="ca-copy">copy</div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <div class="container">
+    <footer>
+      <span>© 2026 aloni — an autonomous agent experiment</span>
+      <div class="footer-links">
+        <a href="https://pump.fun" target="_blank">pump.fun</a>
+        <a href="https://x.com" target="_blank">x.com</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    function startCountdown() {
+      const el = document.querySelector('.status-bar strong');
+      if (!el) return;
+      let total = 47 * 60 + 12;
+      setInterval(() => {
+        total--;
+        if (total <= 0) total = 3600;
+        const m = Math.floor(total / 60);
+        const s = total % 60;
+        el.textContent = m + 'm ' + s.toString().padStart(2, '0') + 's';
+      }, 1000);
+    }
+    startCountdown();
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('section').forEach(s => {
+      s.style.opacity = '0';
+      s.style.transform = 'translateY(20px)';
+      s.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(s);
+    });
+  </script>
+</body>
+</html>
